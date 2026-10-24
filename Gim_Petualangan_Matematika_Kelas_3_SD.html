@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Matematika Kelas 3 SD</title>
+<style>
+:root{--blue:#2457c5;--navy:#18356b;--yellow:#ffd45c;--green:#18885b;--red:#c83f4d;--paper:#fff;--ink:#24324a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(135deg,#eaf6ff,#fff6d8);min-height:100vh}
+header{padding:22px 16px;text-align:center;background:linear-gradient(120deg,#2457c5,#5838a8);color:#fff}
+header h1{margin:0;font-size:clamp(1.5rem,4vw,2.4rem)}header p{margin:8px 0 0}
+main{width:min(900px,94%);margin:22px auto 40px}.panel{background:#fff;border-radius:22px;padding:clamp(16px,4vw,30px);box-shadow:0 10px 30px #1d3c6818;margin-bottom:18px}
+h2{margin-top:0;color:var(--navy)}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+label{font-weight:700;display:block;margin-bottom:6px}input,select{width:100%;padding:12px;border:2px solid #d8e2f1;border-radius:12px;font:inherit}
+button{border:0;border-radius:13px;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s}
+button:hover{transform:translateY(-2px);filter:brightness(1.03)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f3b700;outline-offset:2px}
+.primary{background:var(--blue);color:#fff}.secondary{background:#eaf0ff;color:var(--navy)}.gold{background:var(--yellow);color:#523d00}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.pill{background:#eef3ff;border-radius:999px;padding:7px 12px;font-weight:800;color:var(--navy)}
+.progress{height:12px;background:#e6edf8;border-radius:99px;overflow:hidden;margin:14px 0 22px}.bar{height:100%;width:0;background:linear-gradient(90deg,#21b981,#9ad94b);transition:width .35s}
+.question{font-size:clamp(1.2rem,3vw,1.65rem);font-weight:800;line-height:1.4;margin:18px 0}
+.answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.answer{background:#f3f7ff;border:2px solid #dbe6f8;color:#24324a;text-align:left;min-height:58px}.answer:disabled{cursor:default;opacity:.8}
+.feedback{padding:13px 15px;border-radius:13px;margin:15px 0;font-weight:700;display:none}.feedback.good{display:block;background:#e2f8ed;color:#11633e}.feedback.bad{display:block;background:#fff0f0;color:#a12d38}
+.mascot{font-size:2rem}.hidden{display:none!important}.center{text-align:center}.bigscore{font-size:clamp(2rem,7vw,4rem);font-weight:900;color:var(--blue)}.certificate{border:8px double #d5a927;background:#fffdf4;padding:24px;text-align:center;border-radius:12px;margin-top:16px}.certificate h2{color:#76520a;font-family:Georgia,serif;font-size:clamp(1.5rem,4vw,2.4rem)}.cert-name{font-size:1.8rem;font-weight:900;border-bottom:2px solid #d5a927;display:inline-block;padding:4px 16px}.small{font-size:.92rem;color:#5a6780}.footer{text-align:center;font-size:.85rem;color:#64748b;padding:12px}
+@keyframes pop{0%{transform:scale(.92);opacity:.4}100%{transform:scale(1);opacity:1}}.pop{animation:pop .35s ease-out}
+</style>
+</head>
+<body>
+<header><div class="mascot">🚀 🧮 ⭐</div><h1>Petualangan Matematika</h1><p>Gim Edukasi Seru • Kelas 3 Sekolah Dasar</p></header>
+<main>
+<section id="start" class="panel">
+<h2>🌟 Siap menjadi Juara Matematika?</h2>
+<p>Jelajahi 5 level, jawab soal, kumpulkan bintang, dan dapatkan sertifikat digital setelah menyelesaikan semua tantangan.</p>
+<div class="fields">
+<div><label for="studentName">Nama siswa</label><input id="studentName" maxlength="60" placeholder="Tuliskan nama lengkap"></div>
+<div><label for="studentClass">Kelas</label><select id="studentClass"><option value="3A">3A</option><option value="3B">3B</option><option value="3C">3C</option><option value="3">Kelas 3</option><option value="Lainnya">Lainnya</option></select></div>
+</div>
+<p class="small">Materi: penjumlahan & pengurangan, perkalian & pembagian, pecahan, pengukuran, serta soal cerita yang melatih penalaran.</p>
+<button class="primary" id="startBtn">Mulai Petualangan ▶</button>
+</section>
+<section id="game" class="panel hidden">
+<div class="topline"><span class="pill" id="levelLabel">Level 1 dari 5</span><span class="pill">⭐ Skor: <span id="score">0</span></span><span class="pill" id="qLabel">Soal 1 dari 3</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="small" id="levelTopic"></div>
+<div class="question" id="question"></div>
+<div class="answers" id="answers"></div>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div class="topline" style="margin-top:16px"><span class="small" id="encourage">Kamu pasti bisa!</span><button class="primary hidden" id="nextBtn">Soal Berikutnya →</button></div>
+</section>
+<section id="result" class="panel hidden center">
+<div class="mascot">🏆🎉🌈</div><h2>Petualangan Selesai!</h2><p>Hebat! Kamu sudah menyelesaikan semua level.</p><div class="bigscore" id="finalScore">0</div><p id="scoreMessage"></p>
+<div class="certificate" id="certificate">
+<div style="font-size:2.5rem">🏅</div><h2>SERTIFIKAT PENCAPAIAN</h2>
+<p>Diberikan kepada</p><div class="cert-name" id="certName">Nama Siswa</div>
+<p>Atas keberhasilan menyelesaikan <strong>Petualangan Matematika Kelas 3 SD</strong></p>
+<p>Kelas: <strong id="certClass">3A</strong> &nbsp; | &nbsp; Skor akhir: <strong id="certScore">0</strong></p>
+<p>Tanggal penyelesaian: <strong id="certDate"></strong></p><p style="color:#8a6512;font-weight:800">Terus belajar, terus berprestasi!</p>
+</div>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+<button class="primary" id="downloadBtn">⬇ Unduh Sertifikat</button><button class="secondary" id="againBtn">Main Lagi ↻</button>
+</div><p class="small">Sertifikat diunduh sebagai gambar PNG. Jika perangkat tidak mendukung, gunakan fitur cetak browser.</p>
+</section>
+<div class="footer">Belajar matematika itu menyenangkan. Berani mencoba adalah awal dari keberhasilan! 💙</div>
+</main>
+<script>
+const levels = [
+ {topic:"Level 1 • Penjumlahan dan Pengurangan", qs:[
+  {q:"245 + 132 = ...",a:["367","377","357","387"],c:0,why:"245 + 100 = 345, lalu +32 = 377. Periksa lagi, jawaban yang tepat 377.",correct:1},
+  {q:"500 − 275 = ...",a:["225","235","275","325"],c:0,why:"500 − 200 = 300, lalu 300 − 75 = 225."},
+  {q:"Perpustakaan punya 238 buku. Datang 45 buku baru. Berapa jumlah buku sekarang?",a:["273","283","293","2830"],c:1,why:"238 + 45 = 283 buku."}
+ ]},
+ {topic:"Level 2 • Perkalian dan Pembagian",qs:[
+  {q:"7 × 6 = ...",a:["36","40","42","48"],c:2,why:"7 kelompok yang masing-masing berisi 6 benda berjumlah 42."},
+  {q:"36 permen dibagi rata kepada 4 anak. Setiap anak mendapat ...",a:["8","9","10","12"],c:1,why:"36 ÷ 4 = 9 permen untuk setiap anak."},
+  {q:"Ada 5 kotak. Setiap kotak berisi 8 pensil. Jika 6 pensil dipakai, berapa pensil yang tersisa?",a:["32","34","36","40"],c:1,why:"5 × 8 = 40, lalu 40 − 6 = 34 pensil."}
+ ]},
+ {topic:"Level 3 • Pecahan Sederhana",qs:[
+  {q:"Sebuah pizza dibagi menjadi 4 bagian sama besar. Rani makan 1 bagian. Pecahan yang dimakan adalah ...",a:["1/2","1/3","1/4","3/4"],c:2,why:"Satu dari empat bagian sama besar ditulis 1/4."},
+  {q:"Manakah yang menunjukkan setengah dari satu benda?",a:["1/4","2/4","3/4","1/3"],c:1,why:"2/4 sama dengan 1/2 karena dua dari empat bagian adalah setengah."},
+  {q:"Kue dipotong menjadi 8 bagian sama besar. Tiga bagian dimakan. Berapa bagian yang tersisa?",a:["3/8","4/8","5/8","6/8"],c:2,why:"8 − 3 = 5 bagian, jadi tersisa 5/8 kue."}
+ ]},
+ {topic:"Level 4 • Pengukuran",qs:[
+  {q:"Panjang pita 2 meter. Berapa sentimeter panjang pita itu?",a:["20 cm","200 cm","2.000 cm","120 cm"],c:1,why:"1 meter = 100 cm, jadi 2 meter = 200 cm."},
+  {q:"Sekarang pukul 07.00. Dua jam kemudian pukul ...",a:["08.00","09.00","10.00","11.00"],c:1,why:"Dari pukul 07.00 maju dua jam menjadi pukul 09.00."},
+  {q:"Berat semangka 3 kg dan melon 2 kg. Berapa gram berat keduanya?",a:["500 g","5.000 g","300 g","2.000 g"],c:1,why:"3 kg + 2 kg = 5 kg = 5.000 gram."}
+ ]},
+ {topic:"Level 5 • Tantangan Penalaran",qs:[
+  {q:"Pola bilangan: 4, 8, 12, 16, ... Bilangan berikutnya adalah ...",a:["18","20","22","24"],c:1,why:"Pola bertambah 4 setiap langkah, jadi 16 + 4 = 20."},
+  {q:"Dina punya Rp20.000. Ia membeli buku Rp7.000 dan pensil Rp4.000. Berapa uang kembaliannya?",a:["Rp9.000","Rp10.000","Rp11.000","Rp13.000"],c:0,why:"Rp7.000 + Rp4.000 = Rp11.000; Rp20.000 − Rp11.000 = Rp9.000."},
+  {q:"Ada 24 siswa. Mereka membentuk kelompok berisi 6 siswa. Jika ingin semua siswa masuk kelompok, berapa kelompok yang diperlukan?",a:["3","4","5","6"],c:1,why:"24 ÷ 6 = 4 kelompok. Semua siswa terbagi rata."}
+ ]}
+];
+let level=0, qi=0, score=0, answered=false, correctCount=0;
+const $=id=>document.getElementById(id);
+function beep(ok){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=ok?660:220;g.gain.value=.08;o.start();o.stop(c.currentTime+.16);setTimeout(()=>c.close(),250)}catch(e){}}
+function show(id){$(id).classList.remove("hidden")}function hide(id){$(id).classList.add("hidden")}
+$("startBtn").addEventListener("click",()=>{if(!$("studentName").value.trim()){$("studentName").focus();alert("Tuliskan nama siswa terlebih dahulu ya!");return}level=0;qi=0;score=0;correctCount=0;hide("start");hide("result");show("game");render()});
+function render(){answered=false;const item=levels[level].qs[qi];$("levelLabel").textContent=`Level ${level+1} dari ${levels.length}`;$("score").textContent=score;$("qLabel").textContent=`Soal ${qi+1} dari ${levels[level].qs.length}`;$("bar").style.width=((level*3+qi)/15*100)+"%";$("levelTopic").textContent=levels[level].topic;$("question").textContent=item.q;$("answers").innerHTML="";$("feedback").className="feedback";$("feedback").textContent="";hide("nextBtn");$("encourage").textContent=["Kamu pasti bisa! 💪","Coba pikirkan baik-baik! 🧠","Setiap usaha membuatmu makin hebat! 🌟"][Math.floor(Math.random()*3)];item.a.forEach((a,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+". "+a;b.addEventListener("click",()=>choose(i,b));$("answers").appendChild(b)})}
+function choose(i,btn){if(answered)return;answered=true;const item=levels[level].qs[qi];const buttons=[...$("answers").children];buttons.forEach(b=>b.disabled=true);const right=(item.correct!==undefined?item.correct:item.c);if(i===right){score+=10;correctCount++;$("feedback").className="feedback good";$("feedback").textContent="🎉 Benar sekali! +10 poin. "+item.why;btn.style.borderColor="#18885b";btn.style.background="#e2f8ed";beep(true)}else{$("feedback").className="feedback bad";$("feedback").textContent="Belum tepat, jangan menyerah! Jawaban yang benar: "+item.a[right]+". "+item.why;btn.style.borderColor="#c83f4d";btn.style.background="#fff0f0";buttons[right].style.borderColor="#18885b";buttons[right].style.background="#e2f8ed";beep(false)}$("score").textContent=score;$("nextBtn").textContent=(qi===2&&level===4)?"Lihat Hasil 🏆":(qi===2?"Lanjut ke Level Berikutnya →":"Soal Berikutnya →");show("nextBtn")}
+$("nextBtn").addEventListener("click",()=>{if(qi<2)qi++;else if(level<4){level++;qi=0}else{finish();return}render()});
+function finish(){hide("game");show("result");$("finalScore").textContent=score+" / 150";$("scoreMessage").textContent=correctCount>=13?"Luar biasa! Kamu bintang matematika! 🌟":correctCount>=9?"Kerja bagus! Terus berlatih agar makin hebat! 💪":"Terima kasih sudah berusaha! Terus berlatih, kamu pasti berkembang! 🌱";$("certName").textContent=$("studentName").value.trim();$("certClass").textContent=$("studentClass").value;$("certScore").textContent=score+" / 150";$("certDate").textContent=new Intl.DateTimeFormat("id-ID",{day:"numeric",month:"long",year:"numeric"}).format(new Date());$("bar").style.width="100%"}
+$("againBtn").addEventListener("click",()=>{hide("result");show("start")});
+$("downloadBtn").addEventListener("click",async()=>{const node=$("certificate");try{const canvas=await certificateCanvas(node);const a=document.createElement("a");a.download="Sertifikat_Matematika_"+$("studentName").value.trim().replace(/[^a-z0-9]/gi,"_")+".png";a.href=canvas.toDataURL("image/png");a.click()}catch(e){window.print()}});
+async function certificateCanvas(node){const w=1000,h=650;const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fffdf4";x.fillRect(0,0,w,h);x.strokeStyle="#d5a927";x.lineWidth=12;x.strokeRect(22,22,w-44,h-44);x.strokeStyle="#d5a927";x.lineWidth=2;x.strokeRect(40,40,w-80,h-80);x.textAlign="center";x.fillStyle="#76520a";x.font="bold 46px Georgia";x.fillText("SERTIFIKAT PENCAPAIAN",w/2,130);x.font="48px sans-serif";x.fillText("🏅",w/2,205);x.fillStyle="#34415a";x.font="26px Arial";x.fillText("Diberikan kepada",w/2,265);x.fillStyle="#2457c5";x.font="bold 42px Arial";let name=$("studentName").value.trim();if(name.length>28){x.font="bold 32px Arial"}x.fillText(name,w/2,325);x.strokeStyle="#d5a927";x.beginPath();x.moveTo(180,345);x.lineTo(820,345);x.stroke();x.fillStyle="#34415a";x.font="23px Arial";x.fillText("Atas keberhasilan menyelesaikan",w/2,395);x.font="bold 27px Arial";x.fillText("Petualangan Matematika Kelas 3 SD",w/2,435);x.font="23px Arial";x.fillText("Kelas: "+$("studentClass").value+"   |   Skor akhir: "+score+" / 150",w/2,490);x.fillText("Tanggal: "+$("certDate").textContent,w/2,530);x.fillStyle="#8a6512";x.font="bold 22px Arial";x.fillText("Terus belajar, terus berprestasi!",w/2,580);return c}
+</script>
+</body></html>
